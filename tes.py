@@ -27,8 +27,10 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Конфигурация бота
-BOT_TOKEN = "7651244269:AAHO6Udl8MmVMK9H64Qy5UzySsBlIdHqhYE"  # Замените на реальный токен
-ADMIN_ID = "649815636"  # Ваш Telegram ID
+BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
+ADMIN_ID = os.getenv("ADMIN_ID", "").strip()
+if not BOT_TOKEN or not ADMIN_ID.isdigit():
+    raise RuntimeError("Set BOT_TOKEN and numeric ADMIN_ID in .env before starting the bot.")
 
 # Инициализация бота
 bot = Bot(token=BOT_TOKEN)

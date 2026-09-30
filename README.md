@@ -1,65 +1,76 @@
-Telegram bot for temperature-controlled deliveries in Crimea. Calculates shipping costs based on distance, weight, temperature requirements (chilled/frozen), and urgency. Built with Python/Aiogram.
-GoFROST - Telegram Bot for Temperature-Controlled Deliveries in Crimea
-📌 Overview
-GoFROST is a specialized Telegram bot designed to manage and calculate costs for temperature-sensitive deliveries across Crimea. This solution serves businesses and individuals who need reliable transportation of chilled and frozen goods between major Crimean cities.
-✨ Key Features
-🗺️ Smart Route Calculation
-Covers 10 major Crimean cities including:
+# GoFROST · Delivery Bot
 
-Simferopol
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![Aiogram](https://img.shields.io/badge/Aiogram-3-26A5E4?logo=telegram&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
 
-Sevastopol
+**Telegram-бот для расчёта стоимости доставки охлаждённых и замороженных грузов и приёма заказов.**
 
-Yalta
+Помогает собрать маршрут, вес, температурный режим, срочность и телефон клиента в одной пошаговой заявке. Заказ сохраняется в SQLite и отправляется администратору.
 
-Kerch
+## Сценарий клиента
 
-Feodosia
+1. Выбрать города отправления и назначения из списка десяти городов Крыма.
+2. Указать вес, охлаждение или заморозку, обычную или срочную доставку.
+3. Получить расчёт и указать телефон.
+4. Подтвердить заказ; администратор получает детали в Telegram.
 
-Precise distance calculations using geopy's geodesic algorithm
+## Расчёт стоимости
 
-❄️ Temperature-Sensitive Logistics
-Supports two temperature regimes:
+| Составляющая | Значение в текущем коде |
+| --- | --- |
+| Базовая стоимость | 500 ₽ |
+| Расстояние | 30 ₽/км |
+| Вес больше 10 кг | +100 ₽ |
+| Заморозка | +500 ₽ |
+| Срочная доставка | +1 000 ₽ |
 
-Chilled (+2°C to +6°C)
+Расстояние считается по координатам через `geopy.geodesic`, поэтому это предварительная оценка, а не длина автомобильного маршрута. Тарифы настраиваются в `calculate_price()`.
 
-Frozen (-18°C and below)
+## Запуск
 
-Specialized pricing for different thermal requirements
+Нужен Python 3.10+.
 
-💰 Dynamic Pricing Engine
-Multi-factor cost calculation:
+```bash
+git clone https://github.com/Pupsickk/gofrost-delivery-bot.git
+cd gofrost-delivery-bot
+python -m venv .venv
+```
 
-Base fare: 500₽
+Активируйте окружение: Windows PowerShell — `.venv\Scripts\Activate.ps1`, Linux/macOS — `source .venv/bin/activate`.
 
-Distance rate: 30₽/km
+```bash
+python -m pip install -r requirements.txt
+```
 
-Weight surcharge (for >10kg)
+Скопируйте `.env.example` в `.env` и заполните настройки. Затем:
 
-Temperature premium (frozen +500₽)
+```bash
+python tes.py
+```
 
-Urgency fee (express +1000₽)
+Укажите `BOT_TOKEN` и числовой `ADMIN_ID`. Перед запуском оператор должен отправить боту `/start`, чтобы бот мог присылать ему заказы.
 
-📦 Complete Order Management
-SQLite database for order storage
+## Устройство проекта
 
-Detailed order confirmation system
+| Компонент | Назначение |
+| --- | --- |
+| [tes.py](tes.py) | Обработчики, FSM, клавиатуры и расчёт |
+| `delivery_orders.db` | SQLite-база, создаётся при запуске |
+| `.env` | Локальные настройки бота |
+| [requirements.txt](requirements.txt) | Зависимости |
 
-Instant admin notifications for new orders
-
-User order history tracking
-
-🚀 Getting Started
-Prerequisites
-Python 3.10+
-
-Telegram bot token from @BotFather
-
-Basic understanding of Python environments
-![photo_2025-07-27_11-10-55](https://github.com/user-attachments/assets/a29357a3-8148-4c0c-9d9c-bfd74dd04a28)
-![photo_2025-07-27_11-10-41](https://github.com/user-attachments/assets/e6cc3d63-8f92-4bb9-bdfb-d99a9fc35a5b)
-![photo_2025-07-27_11-10-36](https://github.com/user-attachments/assets/4b7e6dc1-c74f-4648-972f-e996f2b4ae2a)
-<img width="748" height="627" alt="photo_2025-07-27_11-10-17" src="https://github.com/user-attachments/assets/6b445ff3-ec9f-43ae-a239-e0b8b27af6f4" />
-![photo_2025-07-27_11-10-51](https://github.com/user-attachments/assets/8b5f3bcc-3171-4c8d-b0c6-eb05f1b98db7)
+Незавершённые формы находятся в `MemoryStorage` и сбрасываются после перезапуска. Сохранённые заказы остаются в SQLite. Версия не содержит GPS-трекинга, эквайринга или интеграции с дорожными картами.
 
 
+## Скриншоты
+
+<img src="https://github.com/user-attachments/assets/a29357a3-8148-4c0c-9d9c-bfd74dd04a28" alt="Экран приложения 1" width="300" />
+
+<img src="https://github.com/user-attachments/assets/e6cc3d63-8f92-4bb9-bdfb-d99a9fc35a5b" alt="Экран приложения 2" width="300" />
+
+<img src="https://github.com/user-attachments/assets/4b7e6dc1-c74f-4648-972f-e996f2b4ae2a" alt="Экран приложения 3" width="300" />
+
+<img src="https://github.com/user-attachments/assets/6b445ff3-ec9f-43ae-a239-e0b8b27af6f4" alt="Экран приложения 4" width="300" />
+
+<img src="https://github.com/user-attachments/assets/8b5f3bcc-3171-4c8d-b0c6-eb05f1b98db7" alt="Экран приложения 5" width="300" />
